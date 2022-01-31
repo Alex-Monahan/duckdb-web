@@ -31,32 +31,31 @@ def parse_markdown_tables(filepath):
         lines = file.readlines()
         lines = [line.rstrip() for line in lines]
 
-    print(lines[:10])
+    # print(lines[:10])
 
-    #TODO: Once a table line is found, grab the prior line as headers
-    #Save off the tables / parse them into Pandas in some way (not sure how to handle || operator, maybe just skip lines that don't have the same number of columns as the header)
-    #Check for a header on each line. Use that header as a column in the dataset. Also include the filepath / filename
     within_table = False
     tables = []
     current_header=''
     for i, line in enumerate(lines):
         if len(line) > 0 and line.strip(' ')[0] == '#':
             current_header = line.strip('#').strip(' ')
-            print('current_header:',current_header)
+            # print('current_header:',current_header)
         if '|:---|' in line:
-            print('Found a table!','\n',i,line)
+            # print('Found a table!','\n',i,line)
             within_table = True
             tables.append(['| '+'filepath'+' | '+'current_header' + lines[i-1]])
             continue #Don't save that line
         if line == '':
             if within_table:
-                print('End of table')
+                # print('End of table')
+                pass
             within_table = False
         if within_table:
-            print('Within table, line',i)
+            # print('Within table, line',i)
             tables[-1].append('| '+filepath+' | '+current_header + line)
         else:
-            print('not in table, line',i)
+            # print('not in table, line',i)
+            pass
     print(tables)
     df_list = []
     for table in tables:
@@ -92,3 +91,34 @@ for root, dirs, files in os.walk(r'docs\sql\functions'):
 all_files_md = pd.concat(md_dfs,axis='index',ignore_index=True)
 print(all_files_md.head())
 all_files_md.to_csv(r'docs\sql\functions\descriptions.txt',sep='\t',index=False)
+
+
+# TODO: 
+# Compare with the list of DuckDB functions and see what is missing
+#   Check if some of the missing are in other parts of the docs
+# Categorize which functions are of which type
+# Parse the parameters from the docs into an array in some way
+#   (is there a way to document optionality in some way?)    
+# Decide how to include parameters and parameter types in a clean way (tooltips?) in the final output
+#   This isn't too big of a deal.
+#   An average of 1.8 different sets of parameters. Only 20 functions / operators have over 5 parameter sets
+# Document the missing functions?
+
+output_df = conn.execute("""
+    select distinct
+        function_name
+        ,docs.*
+    from duckdb_functions() funcs
+    left join all_files_md docs
+        on docs.function like '%' || funcs.function_name || '%'
+    where
+        funcs.function_type = 'scalar'
+        and docs.function is null
+    order by 
+        function_name
+""").fetchdf()
+output_df.to_csv('duckdb_functions_join_docs.tab',sep='\t', index=False)
+
+
+
+
