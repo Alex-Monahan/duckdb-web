@@ -96,13 +96,15 @@ all_files_md.to_csv(r'docs\sql\functions\descriptions.txt',sep='\t',index=False)
 # TODO: 
 # Compare with the list of DuckDB functions and see what is missing
 #   Check if some of the missing are in other parts of the docs
+# Document the missing functions?
+#   This is the point of the whole endeavor! Let's get this value ASAP.
 # Categorize which functions are of which type
 # Parse the parameters from the docs into an array in some way
 #   (is there a way to document optionality in some way?)    
 # Decide how to include parameters and parameter types in a clean way (tooltips?) in the final output
 #   This isn't too big of a deal.
 #   An average of 1.8 different sets of parameters. Only 20 functions / operators have over 5 parameter sets
-# Document the missing functions?
+
 
 output_df = conn.execute("""
     select distinct
