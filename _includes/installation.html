@@ -17,7 +17,6 @@
 		<h3>Environment</h3>
 		<ul class="environment">
 			<li data-id=".cli" class="selected">Command Line</li>
-			<li data-id=".tea">Command Line (tea.xyz)</li>
 			<li data-id=".python">Python</li>
 			<li data-id=".r">R</li>
 			<li data-id=".java">Java</li>
@@ -25,6 +24,7 @@
 			<li data-id=".julia">Julia</li>
 			<li data-id=".cplusplus">C/C++</li>
 			<li data-id=".odbc">ODBC</li>
+			<li data-id=".tea">Command Line (tea.xyz)</li>
 		</ul>
 		<label class="onlymobile">
 			<select name="environment" class="environmentselect onlymobile">
@@ -36,6 +36,7 @@
 				<option value=".julia">Julia</option>
 				<option value=".cplusplus">C/C++</option>
 				<option value=".odbc">ODBC</option>
+				<option value=".tea">Command Line (tea.xyz)</option>
 			</select>
 		</label>
 	</div>
@@ -305,6 +306,11 @@ result->Print();{% endhighlight %}
 	</div>
 
 	<div class="example odbc">
+	</div>
+
+	<div class="example tea">
+		{% highlight bash %}sh <(curl https://tea.xyz) +duckdb.org duckdb -c 'select version()'{% endhighlight %}
+		{% highlight bash %}./duckdb{% endhighlight %}
 	</div>
 
 </div>
